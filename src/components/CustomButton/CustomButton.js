@@ -42,6 +42,33 @@ const style = StyleSheet.create({
     alignItems: "center",
     borderRadius: 10,
   },
+  container_greysmall:{
+    //flex: 1,
+   
+    width: "40%",
+    height:50,
+    paddingVertical: 6,
+    marginVertical: 5,
+    alignItems: "center",
+    borderRadius: 10,
+    backgroundColor:'#CACACA',
+    right:10,
+  justifyContent:"center"
+  },
+  container_greensmall:{
+    //flex: 1,
+   
+    width: "40%",
+    height:50,
+    paddingVertical: 6,
+    marginVertical: 5,
+    alignItems: "center",
+    borderRadius: 10,
+    backgroundColor: "#35D7A1",
+    left:10,
+    alignItems:'center',
+    justifyContent:"center"
+  },
   container_small: {
     flex: 1,
     borderColor: "#35D7A1",
@@ -60,6 +87,20 @@ const style = StyleSheet.create({
     lineHeight: 24,
     textAlign: "center",
   },
+  text_greysmall: {
+    fontWeight: "500",
+    color: "white",
+   fontSize: 20,
+    lineHeight: 24,
+  
+  },
+  text_greensmall: {
+    fontWeight: "500",
+    color: "white",
+    alignSelf: "center",
+    fontSize: 20,
+    lineHeight: 24,
+     },
 
   text_TERTIARY: {
     color: "#35D7A1",
