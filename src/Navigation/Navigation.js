@@ -7,6 +7,7 @@ import Screen2 from "../Screens/Screen2/Screen2";
 import Home from "../Screens/Home/Home";
 import Screen3 from "../Screens/Screen3/Screen3";
 import OnboardingScreen from "../Screens/Onboarding/OnboardingScreen";
+import ProgressBar from "../Screens/ProgressBar/ProgressBar";
 const Stack = createNativeStackNavigator();
 const Navigation = () => {
   return (
@@ -17,6 +18,7 @@ const Navigation = () => {
         <Stack.Screen name="onboarding" component={OnboardingScreen} />
         <Stack.Screen name="login" component={Screen3} />
         <Stack.Screen name="home" component={Home} />
+        <Stack.Screen name="progressbar" component={ProgressBar} />
       </Stack.Navigator>
     </NavigationContainer>
   );

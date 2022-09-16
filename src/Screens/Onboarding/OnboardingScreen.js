@@ -6,32 +6,8 @@ import { useFonts } from "expo-font";
 import CustomInput from "../../components/CustomInput/CustomInput";
 import CustomButton from "../../components/CustomButton/CustomButton";
 import { FontAwesome } from "@expo/vector-icons";
+import { OnboardingSlides } from "../../dataset/OnBoardingList";
 
-const slides = [
-  {
-    id: 1,
-
-    subtitle: "Collaboration Space",
-    text: "Create value by collaboration. Network and Collaborate with people trying to solve similar problems. ",
-    imageUrl: require("../../assets/onboarding1.png"),
-  },
-
-  {
-    id: 2,
-
-    subtitle: "Flexible Options",
-    text: "Choice to work from a private office or a dedicated desk. Arrange Meetings in a purpose-built room for presentations and discussions.",
-    imageUrl: require("../../assets/onboarding2.png"),
-  },
-
-  {
-    id: 3,
-
-    subtitle: "Hub Exclusive Events",
-    text: "Access events exclusive to Hub Members. Learn and Work with thought leaders and pitch your solution to possible investors. ",
-    imageUrl: require("../../assets/onboarding3.png"),
-  },
-];
 const OnboardingScreen = ({ navigation }) => {
   const handleLogin = () => {};
   let [fontsLoaded] = useFonts({
@@ -53,26 +29,26 @@ const OnboardingScreen = ({ navigation }) => {
       </View>
     );
   };
-
+const renderItem=({item})=>{
+return (
+  <View style={style.container}>
+  {/* <Text style={style.title}>{item.title}</Text> */}
+  <Image
+    style={style.image}
+    source={item.imageUrl}
+    resizeMode="contain"
+  />
+  <Text style={style.subtitle}>{item.subtitle}</Text>
+  <Text style={style.text}>{item.text}</Text>
+</View>
+)
+}
   return (
     <>
       <Text style={style.title}>WELCOME TO THE FINTECH SAUDI</Text>
       <AppIntroSlider
-        data={slides}
-        renderItem={({ item }) => {
-          return (
-            <View style={style.container}>
-              {/* <Text style={style.title}>{item.title}</Text> */}
-              <Image
-                style={style.image}
-                source={item.imageUrl}
-                resizeMode="contain"
-              />
-              <Text style={style.subtitle}>{item.subtitle}</Text>
-              <Text style={style.text}>{item.text}</Text>
-            </View>
-          );
-        }}
+        data={OnboardingSlides}
+        renderItem={renderItem}
         activeDotStyle={{
           backgroundColor: "#494949",
         }}

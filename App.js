@@ -7,16 +7,18 @@ import Screen4 from "./src/Screens/Screen4/Screen4";
 import Navigation from "./src/Navigation/Navigation";
 import Home from "./src/Screens/Home/Home";
 import Onboarding from "./src/Screens/Onboarding/OnboardingScreen";
+import ProgressBar from "./src/Screens/ProgressBar/ProgressBar";
 export default function App() {
   return (
     <View style={styles.container}>
-      <Navigation />
+      {/* <Navigation /> */}
       {/* <Screen4/> */}
       {/* <Screen3/> */}
       {/* <Home/> */}
-      {/* <Onboarding/> */}
+      {/* <Onboarding /> */}
       {/* <Screen2/> */}
       {/* <Screen/> */}
+      <ProgressBar/>
     </View>
   );
 }
@@ -24,7 +26,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: '#fff',
+    //backgroundColor: '#fff',
     // alignItems: 'center',
     // justifyContent: 'center',
   },
