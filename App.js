@@ -8,6 +8,7 @@ import Navigation from "./src/Navigation/Navigation";
 import Home from "./src/Screens/Home/Home";
 import Onboarding from "./src/Screens/Onboarding/OnboardingScreen";
 import ProgressBar from "./src/Screens/ProgressBar/ProgressBar";
+import Pb1 from "./src/Screens/pb1/Pb1";
 export default function App() {
   return (
     <View style={styles.container}>
@@ -18,7 +19,9 @@ export default function App() {
       {/* <Onboarding /> */}
       {/* <Screen2/> */}
       {/* <Screen/> */}
-      <ProgressBar/>
+      {/* <ProgressBar/> */}
+      <Pb1/>
+    
     </View>
   );
 }

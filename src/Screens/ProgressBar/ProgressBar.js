@@ -1,31 +1,41 @@
 import React, {
-  Component,
   createRef,
   forwardRef,
   useCallback,
   useEffect,
+  useState,
 } from "react";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import BottomSheet, {
+  BottomSheetBackdrop,
+  useBottomSheetDynamicSnapPoints,
+  BottomSheetView,
+} from "@gorhom/bottom-sheet";
+import { Platform } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { FontAwesome } from "@expo/vector-icons";
-import { useState } from "react";
+//import normalize from "react-native-normalize";
 import { useRef } from "react";
 import {
-  findNodeHandle,
   TouchableOpacity,
+  Image,
   Text,
   View,
   StyleSheet,
   Dimensions,
   FlatList,
   Animated,
+  TextInput,
 } from "react-native";
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
-import { TabView, SceneMap, TabBar } from "react-native-tab-view";
+import CustomButton from "../../components/CustomButton/CustomButton";
 import { useFonts } from "expo-font";
-import { measure } from "react-native-reanimated";
-
+import CustomInput from "../../components/CustomInput/CustomInput";
+import { Alert } from "react-native";
 const { width, height } = Dimensions.get("screen");
 
 const Tab = forwardRef(({ item, onItemPress }, ref) => {
+  const [stepNumber, setStepNumber] = useState(1);
   return (
     <TouchableOpacity onPress={onItemPress}>
       <View ref={ref}>
@@ -65,7 +75,7 @@ const Indicator = ({ measures, scrollX }) => {
         position: "relative",
         height: 9,
         zIndex: 1,
-        //  width: IndicatorWidth,
+        // //  width: IndicatorWidth,
         width: 140,
         backgroundColor: "#30B991",
 
@@ -80,8 +90,9 @@ const Indicator = ({ measures, scrollX }) => {
     />
   );
 };
-const Tabs = ({ data, scrollX, onItemPress }) => {
+const Tabs = ({ data, scrollX, onItemPress, setMyPlan }) => {
   const [measures, setMeasures] = useState([]);
+
   const containerRef = useRef();
   useEffect(() => {
     let m = [];
@@ -102,7 +113,7 @@ const Tabs = ({ data, scrollX, onItemPress }) => {
       );
     });
   }, [measures[0]?.height == 0]);
-  console.log(measures);
+
   return (
     <View style={{ position: "absolute", top: 100, width }}>
       <View ref={containerRef} style={style.indicatorStyling}>
@@ -114,6 +125,8 @@ const Tabs = ({ data, scrollX, onItemPress }) => {
               ref={item.ref}
               onItemPress={() => {
                 onItemPress(index);
+                setMyPlan(item.heading);
+                console.log("-----Tab items ----", item.heading);
               }}
             />
           );
@@ -127,25 +140,9 @@ const Tabs = ({ data, scrollX, onItemPress }) => {
   );
 };
 
-// const FirstRoute = () => (
-//   <View style={{ flex: 1, backgroundColor: "#ff4081" }}>
-//     <Text>
-//       <Text>kwelfwefkwflw</Text>
-//     </Text>
-//   </View>
-// );
-
-// const SecondRoute = () => (
-//   <View style={{ flex: 1, backgroundColor: "#673ab7" }}></View>
-// );
-
-// const renderScene = SceneMap({
-//   first: FirstRoute,
-//   second: SecondRoute,
-// });
-
 const headings = { Monthly: "MONTHLY", Yearly: "YEARLY" };
 const subtitle = { Monthly: "SAR2000", Yearly: "SAR24000" };
+const input = { Monthly: "SAR2000", Yearly: "SAR24000" };
 const data = Object.keys(headings).map((i) => ({
   key: i,
   title: i,
@@ -153,14 +150,40 @@ const data = Object.keys(headings).map((i) => ({
   subtitle: subtitle[i],
   ref: createRef(),
 }));
+console.log("data", data);
 const ProgressBar = () => {
+  const bottomSheetRef = useRef(null);
+
+  const snapPoints = React.useMemo(() => ["25%", "40%"], []);
+  const renderBackdropBottomSheet = useCallback(
+    (props) => (
+      <BottomSheetBackdrop
+        {...props}
+        BackdropPressBehavior="close"
+        disappearsOnIndex={-1}
+        appearsOnIndex={0}
+      />
+    ),
+    []
+  );
+  const {
+    animatedHandleHeight,
+    animatedSnapPoints,
+    animatedContentHeight,
+    handleContentLayout,
+  } = useBottomSheetDynamicSnapPoints(snapPoints);
+
   const scrollX = useRef(new Animated.Value(0)).current;
   const ref = useRef();
+
+  const [myPlan, setMyPlan] = useState("MONTHLY");
+  const [enterMonth, setEnterMonth] = useState();
   const onItemPress = useCallback((itemIndex) => {
     ref?.current?.scrollToOffset({
       offset: itemIndex * width,
     });
   });
+
   let [fontsLoaded] = useFonts({
     light: require("../../assets/fonts/Montserrat-Light.ttf"),
     medium: require("../../assets/fonts/Montserrat-Medium.ttf"),
@@ -179,6 +202,7 @@ const ProgressBar = () => {
             <FontAwesome name="check" size={12} color="#30B991"></FontAwesome>
             <Text style={style.tabViewText}>Access to book meeting rooms</Text>
           </View>
+
           <View style={{ flexDirection: "row", top: 12 }}>
             <FontAwesome name="check" size={12} color="#30B991"></FontAwesome>
             <Text style={style.tabViewText}>Printing Credits</Text>
@@ -197,117 +221,179 @@ const ProgressBar = () => {
       </View>
     );
   };
-  // const layout = useWindowDimensions();
+  const handleLogin = () => {
+    console.log("month", enterMonth);
+  };
+  const calendarOpen = () => {};
+  const onNext = () => {};
 
-  //   const [index, setIndex] = useState(0);
-  //   const [routes] = useState([
-  //     { key: "first", title: "First" },
-  //     { key: "second", title: "Second" },
-  //   ]);
-  //   const renderTabBar = (props) => (
-  //     <TabBar
-  //       {...props}
-  //       indicatorStyle={{ backgroundColor: "#30B991" }}
-  //       style={{ backgroundColor: "white" }}
-  //       renderLabel={({ route, focused, color }) => (
-  //         <Text style={{ color: "#172659", margin: 8, fontSize: 16,fontFamily: "bold", }}>
-  //           {route.title}
-  //         </Text>
-  //       )}
-  //     />
-  //   );
+  const step2 = () => {
+    if (myPlan === "MONTHLY") {
+      return (
+        <View>
+          <Text style={style.titlestep2}>SELECT DURATION & TEAM </Text>
+
+          <View style={{ top: 12 }}>
+            {/* <CustomInput name="Start Date" /> */}
+            <Text style={style.step2text}>Start Date</Text>
+            {/* <FontAwesome name="calendar" size={25} color="#30B991"></FontAwesome>
+          
+            <Icon name="calendar" color="#ccc" size={25} /> */}
+
+            {/* <View style={{justifyContent:"space-evenly",flexDirection:"row"}}> */}
+            <View style={style.step2container}>
+              <TouchableOpacity
+                style={style.forgotContainer}
+                onPress={(i) => bottomSheetRef.current?.snapToIndex(0)}
+              >
+                <FontAwesome name="calendar" size={25} color="#16275A" />
+              </TouchableOpacity>
+            </View>
+
+            {/* </View> */}
+            {/* <Image source={ require("../../assets/calendar_month.png")}/> */}
+
+            <CustomInput
+              name="Number of months"
+              placeholder="Select Number of months"
+              value={enterMonth}
+              setValue={setEnterMonth}
+            />
+            <CustomButton text="Login" onPress={handleLogin} type="primiary" />
+            {enterMonth && (
+              <View>
+                <Text>Expected End Date</Text>
+                <Text> June 01,2022</Text>
+              </View>
+            )}
+
+            <CustomInput
+              name="Team members"
+              placeholder="Select Team Members"
+            />
+          </View>
+        </View>
+      );
+    } else {
+      return (
+        <View>
+          <Text style={style.titlestep2}>SELECT DURATION & TEAM</Text>
+          <View style={{ top: 12 }}>
+            <CustomInput name="Start Date" />
+            <CustomInput
+              name="Team members"
+              placeholder="Select Team Members"
+            />
+          </View>
+        </View>
+      );
+    }
+  };
   return (
-    <View style={style.container}>
-      <ProgressSteps
-        topOffset={60}
-        borderWidth={2}
-        activeStepNumColor="white"
-        activeStepIconBorderColor="transparent"
-        completedCheckColor="white"
-        activeStepIconColor="#172659"
-        completedStepIconColor="#35D7A1"
-        completedProgressBarColor="#CACACA"
-        //  completedCheckColor= "transparent"
-        completedStepNumColor="white"
-
-        // label= "hora"
+    <GestureHandlerRootView style={style.gestureContainer}>
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={-1}
+        snapPoints={animatedSnapPoints}
+        enablePanDownToClose={true}
+        keyboardBehavior="interactive"
+        keyboardBlurBehavior="restore"
+        backdropComponent={renderBackdropBottomSheet}
+        shouldMeasureContentHeight={true}
+        handleHeight={animatedHandleHeight}
+        contentHeight={animatedContentHeight}
       >
-        <ProgressStep
-          nextBtnTextStyle={style.nextbuttontextstytle}
-          nextBtnText={"proceed"}
-          nextBtnStyle={style.firstnextBtnStyle}
-        >
-          <View
-          // style={{ alignItems: "center",backgroundColor:"red" }}
-          >
-            <View style={{ paddingTop: 10 }}>
-              <Text style={style.title}>SELECT PAYMENT PLAN</Text>
-              {/* <TabView
-                indicatorStyle={{ backgroundColor: "white" }}
-                navigationState={{ index, routes }}
-                renderTabBar={renderTabBar}
-                renderScene={renderScene}
-                onIndexChange={setIndex}
-                initialLayout={{ width: "50%" }}
-              /> */}
+        <BottomSheetView onLayout={handleContentLayout}>
+          <View style={style.a}>
+            <Text>hhhhhhhhhhhhh</Text>
+          </View>
+        </BottomSheetView>
+      </BottomSheet>
 
-              <Animated.FlatList
+      <View style={style.container}>
+        <ProgressSteps
+          topOffset={60}
+          borderWidth={2}
+          activeStepNumColor="white"
+          activeStepIconBorderColor="transparent"
+          completedCheckColor="white"
+          activeStepIconColor="#172659"
+          completedStepIconColor="#35D7A1"
+          completedProgressBarColor="#CACACA"
+          //  completedCheckColor= "transparent"
+          completedStepNumColor="white"
+
+          // label= "hora"
+        >
+          <ProgressStep
+            nextBtnTextStyle={style.nextbuttontextstytle}
+            nextBtnText={"proceed"}
+            nextBtnStyle={style.firstnextBtnStyle}
+            onNext={onNext}
+            //scrollable={false}
+          >
+            {/* <CustomInput/> */}
+            <View
+            //style={{ alignItems: "center",backgroundColor:"red" }}
+            >
+              <View style={{ paddingTop: 10 }}>
+                <Text style={style.title}>SELECT PAYMENT PLAN</Text>
+
+                <Animated.FlatList
+                  data={data}
+                  ref={ref}
+                  onScroll={Animated.event(
+                    [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+                    { useNativeDriver: true }
+                  )}
+                  horizontal
+                  pagingEnabled
+                  bounces={false}
+                  showsHorizontalScrollIndicator={false}
+                  keyExtractor={(item) => item.key}
+                  renderItem={renderItem}
+                />
+              </View>
+              <Tabs
+                scrollX={scrollX}
                 data={data}
-                ref={ref}
-                onScroll={Animated.event(
-                  [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-                  { useNativeDriver: false }
-                )}
-                horizontal
-                pagingEnabled
-                bounces={false}
-                showsHorizontalScrollIndicator={false}
-                keyExtractor={(item) => item.key}
-                renderItem={renderItem}
+                onItemPress={onItemPress}
+                setMyPlan={(plan) => setMyPlan(plan)}
               />
             </View>
-            <Tabs scrollX={scrollX} data={data} onItemPress={onItemPress} />
-          </View>
-        </ProgressStep>
-        <ProgressStep
-          nextBtnTextStyle={style.nextbuttontextstytle}
-          nextBtnText={"proceed"}
-          nextBtnStyle={style.nextBtnStyle}
-        >
-          <View style={{ alignItems: "center" }}>
-            <Text>Educación</Text>
-          </View>
-        </ProgressStep>
-        <ProgressStep
-          nextBtnTextStyle={style.nextbuttontextstytle}
-          finishBtnText={"proceed"}
-          nextBtnStyle={style.nextBtnStyle}
-        >
-          <View style={{ alignItems: "center" }}>
-            <Text>Ubicación</Text>
-          </View>
-        </ProgressStep>
-      </ProgressSteps>
-      {/* <Text>ijliioeldiid</Text> */}
-    </View>
+          </ProgressStep>
+
+          <ProgressStep
+            nextBtnTextStyle={style.nextbuttontextstytle}
+            nextBtnText={"proceed"}
+            nextBtnStyle={style.nextBtnStyle}
+            scrollable={false}
+          >
+            {step2()}
+          </ProgressStep>
+
+          <ProgressStep
+            nextBtnTextStyle={style.nextbuttontextstytle}
+            finishBtnText={"proceed"}
+            nextBtnStyle={style.nextBtnStyle}
+            scrollable={false}
+          >
+            <View style={{ alignItems: "center" }}>
+              <Text>3rd step</Text>
+            </View>
+          </ProgressStep>
+        </ProgressSteps>
+        {/* <Text>ijliioeldiid</Text> */}
+      </View>
+    </GestureHandlerRootView>
   );
 };
 
 const style = StyleSheet.create({
   container: {
     flex: 1,
-    //justifyContent: "center",
-    alignItems: "center",
-  },
-  progressStepsStyle: {
-    activeStepIconBorderColor: "#3584c5",
-    activeStepNumColor: "transparent",
-    activeStepIconColor: "#3584c5",
-    completedStepIconColor: "#3584c5",
-    completedProgressBarColor: "#3584c5",
-    completedCheckColor: "transparent",
-    label: "hora",
-    labelColor: "#3584c5",
+    justifyContent: "center",
+    // alignItems: "center",
   },
 
   nextbuttontextstytle: {
@@ -321,24 +407,36 @@ const style = StyleSheet.create({
   nextBtnStyle: {
     backgroundColor: "#35D7A1",
 
-    width: "355%",
+    width: "330%",
     paddingVertical: 16,
-    marginVertical: 90,
-    right: 166,
+    // marginVertical: 92,
+    right: 184,
     borderRadius: 10,
+    top: 200,
   },
   firstnextBtnStyle: {
     backgroundColor: "#35D7A1",
 
     width: "330%",
     paddingVertical: 16,
-    marginVertical: 92,
+    marginVertical: 52,
     right: 184,
 
     borderRadius: 10,
-    bottom: 60,
+    bottom: 100,
   },
   title: {
+    fontFamily: "bold",
+    color: "#172659",
+    fontSize: 20,
+    left: 16,
+  },
+  title2: {
+    fontFamily: "bold",
+    color: "#172659",
+    fontSize: 20,
+  },
+  titlestep2: {
     fontFamily: "bold",
     color: "#172659",
     fontSize: 20,
@@ -392,5 +490,42 @@ const style = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: "white",
   },
+  step2container: {
+    backgroundColor: "rgba(245, 245, 245, 1)",
+    //width: "100%",
+    marginLeft: 16,
+    marginRight: 16,
+    height: 65,
+    borderColor: "#e8e8e8",
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginVertical: 10,
+    alignItems: "flex-end",
+    justifyContent: "center",
+  },
+  step2text: {
+    fontSize: 16,
+    fontFamily: "bold",
+    marginLeft: 16,
+  },
+  bottomSheetHeader: {
+    height: 4,
+    width: 36,
+    backgroundColor: "rgba(217, 217, 217, 0.4)",
+    alignSelf: "center",
+  },
+  forgotContainer: {
+    marginVertical: 20,
+    alignItems: "center",
+  },
+  gestureContainer: {
+    height: "10%",
+    flex: 1,
+  },
+  a: {
+    zIndex: 1,
+  },
 });
+
 export default ProgressBar;

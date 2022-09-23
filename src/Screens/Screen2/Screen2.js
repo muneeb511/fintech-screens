@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import { useFonts } from "expo-font";
-
+import { cards } from "../../dataset/Cards";
 import {
   Text,
   View,
@@ -23,23 +23,6 @@ const Screen2 = () => {
     bold: require("../../assets/fonts/Montserrat-Bold.ttf"),
   });
 
-  const cards = [
-    {
-      title: "TOUR",
-      text: "Apply for a tour and get a chance to explore the fintech hub space ",
-      imageUrl: require("../../assets/Rectangle2587.png"),
-    },
-    {
-      title: "PASS",
-      text: "Work on any day as required, without any long term commitment ",
-      imageUrl: require("../../assets/Rectangle25871.png"),
-    },
-    {
-      title: "MEMBERSHIP",
-      text: "Build your next idea at the hub, enjoy dedicated space for your team.",
-      imageUrl: require("../../assets/Rectangle25872.png"),
-    },
-  ];
   const handleApplyNow = () => {};
 
   return (

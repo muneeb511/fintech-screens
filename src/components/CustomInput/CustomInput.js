@@ -1,32 +1,36 @@
 import { Text, View, TextInput, StyleSheet } from "react-native";
 import { useFonts } from "expo-font";
-import AppLoading from "expo-app-loading";
-const CustomInput = ({ name, secureTextEntry, value, setValue }) => {
+
+const CustomInput = ({
+  name,
+  secureTextEntry,
+  value,
+  setValue,
+  placeholder,
+}) => {
   let [fontsLoaded] = useFonts({
     light: require("../../assets/fonts/Montserrat-Light.ttf"),
     medium: require("../../assets/fonts/Montserrat-Medium.ttf"),
     bold: require("../../assets/fonts/Montserrat-Bold.ttf"),
   });
-  if (!fontsLoaded) {
-    return <AppLoading />;
-  }
+
   return (
-    <View>
-      <Text style={style.text}>{name}</Text>
+    <View >
+      <Text style={styles.text}>{name}</Text>
       <TextInput
-        style={style.container}
+        style={styles.container}
         // onBlur={onBlur}
         value={value}
         secureTextEntry={secureTextEntry}
         onChangeText={setValue}
+        placeholder={placeholder}
       />
     </View>
   );
 };
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#CACACA'
-    ,
+    backgroundColor: "rgba(245, 245, 245, 1)",
     //width: "100%",
     marginLeft: 16,
     marginRight: 16,

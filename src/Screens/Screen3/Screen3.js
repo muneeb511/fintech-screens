@@ -13,7 +13,7 @@ import { useFonts } from "expo-font";
 
 import CustomInput from "../../components/CustomInput/CustomInput";
 import CustomButton from "../../components/CustomButton/CustomButton";
-import { useNavigation } from "@react-navigation/native";
+//import { useNavigation } from "@react-navigation/native";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
@@ -25,7 +25,7 @@ const Screen3 = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isBs, setIsBs] = useState(false);
 
-  const navigation = useNavigation();
+  //const navigation = useNavigation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
